@@ -23,8 +23,8 @@ public class DeptController {
      * @return
      */
     @RequestMapping("user/findAll")
-    public List<UserEntity> findAll(@RequestBody DeptEntity dept){
-        List<UserEntity> list = deptService.findAll(dept);
+    public List<UserEntity> findAll(){
+        List<UserEntity> list = deptService.findAll();
         return list;
     }
 

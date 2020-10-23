@@ -6,7 +6,7 @@ import com.jk.entity.UserEntity;
 import java.util.List;
 
 public interface DeptService {
-    List<UserEntity> findAll(DeptEntity dept);
+    List<UserEntity> findAll();
 
     void updDept(DeptEntity dept);
 
