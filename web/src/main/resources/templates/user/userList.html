@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="UTF-8">
+   <!-- <link rel="stylesheet" th:href="@{/webjars/bootstrap/3.3.7/dist/css/bootstrap.css}">-->
+    <link rel="stylesheet" href="/css/bootstrap.css">
+    <script th:src="@{/webjars/jquery/3.5.1/dist/jquery.min.js}"></script>
+    <script th:src="@{/webjars/bootstrap/3.3.7/dist/js/bootstrap.min.js}"></script>
+    <script type="text/javascript" src="/vue/vue.min.js"></script>
+    <script type="text/javascript" src="/bootstrap/bootstrap-paginator.js"></script>
+    <title>学生列表</title>
+</head>
+<body>
+<div id="app">
+
+    <div class="view">
+
+        <nav class="navbar navbar-default" role="navigation">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">Brand</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li class="active">
+                        <a href="#" data-toggle="modal" data-target="#editModal">Add</a>
+                        <!--<button type="button" class="btn" title="Add" data-toggle="modal" data-target="#editModal" >新增</button>-->
+                    </li>
+                </ul>
+              <!--  <form class="navbar-form navbar-left" role="search">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Name"></div>
+                    <button type="submit" class="btn btn-default">Submit</button>
+                </form>-->
+
+            </div>
+            <!-- /.navbar-collapse -->
+        </nav>
+
+    </div>
+
+
+    <table class="table table-hover">
+        <tr>
+            <th>#</th>
+            <th>NAME</th>
+            <th>DEPTID</th>
+            <th>CREATETIME</th>
+            <th>POST</th>
+            <th>RESP</th>
+            <th>UPDATE</th>
+            <th>DELETE</th>
+        </tr>
+        <tr v-for="user in userList">
+            <td>{{user.userId}}</td>
+            <td>{{user.userName}}</td>
+            <td>{{user.deptName}}</td>
+            <td>{{user.userCreatetime}}</td>
+            <td>{{user.userPost}}</td>
+            <td>{{user.userResp}}</td>
+
+            <td>
+
+                <button class="btn btn-success" :value="user.userId" data-dismiss="modal" data-toggle="modal" data-target="#editModal" onclick="HxUser(this.value)">修改</button>
+            </td>
+            <td>
+                <button class="btn btn-success" :value="user.userId" data-dismiss="modal" onclick="deleteUser(this.value)">删除</button>
+
+            </td>
+        </tr>
+    </table>
+    <div id="example" style="text-align: center;"> <ul id="pageLimit"></ul> </div>
+
+    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" >
+            <div class="modal-content">
+                <div class="modal-header">
+                   <!-- <span aria-hidden="true">&times;</span>-->
+                   <button type="button" class="close" data-dismiss="modal" aria-hidden="true">❌</button>
+                    <h3 id="myModalLabel">用户新增</h3>
+                </div>
+                <div class="modal-body">
+                    <form id="addForm"  method="post">
+                        <table class="table table-bordered table-striped"  width="800px">
+                            <!--id、名称、部门（两表）、入职日期、岗位、职责-->
+                            <input type="hidden" :value="userHxList.userId" name="userId">
+                            <tr>
+                                <td>姓名</td>
+                                <td><input :value="userHxList.userName" id="username" name="userName" class="form-control" placeholder="请输入姓名"></td>
+                            </tr>
+                            <tr>
+                                <td>部门</td>
+                                <td>
+                                   <!-- <div class="col-sm-3">
+                                        <select class="selectpicker form-control" data-live-search="true" name="addid" id="addid">
+                                        </select>
+                                    </div>-->
+
+                                    <input :checked="userHxList.userDeptid==1" name="userDeptid" type="radio"  value="1">产品
+                                    <input :checked="userHxList.userDeptid==2" name="userDeptid" type="radio"  value="2">开发
+
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>岗位</td>
+                                <td>
+                                    <!--<input :checked="userHxList.userClassid==1" name="userPost" type="radio"  value="1">2003
+                                    <input :checked="userHxList.userClassid==2" name="userClassid" type="radio"  value="2">2004-->
+                                    <input :value="userHxList.userPost"  name="userPost" class="form-control" placeholder="请输入岗位">
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>职责</td>
+                                <td><input :value="userHxList.userResp"  name="userResp" class="form-control" placeholder="职责"></td>
+                            </tr>
+
+                        </table>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-success" data-dismiss="modal" aria-hidden="true" onclick="saveUser()">保存</button>
+                    <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+
+
+
+<script>
+
+    var vm = new Vue({
+        el: '#app',
+        data: {
+            userList: "",
+            userHxList:"",
+            radioflag:"",
+
+        }
+    })
+
+
+
+     function shows(a) {
+            $('.buttonText').text(a)
+        }
+
+    //关闭模态框时清空数据
+    $(function (){
+        $('#editModal').on('hidden.bs.modal', function (){
+            $(':input','#addForm').not(':button,:submit,:reset').val('').removeAttr('checked').removeAttr('checked');
+        });
+    });
+
+
+    $(function() {
+        searchUserList();
+    })
+
+
+    function searchUserList(){
+
+        $.ajax({
+            type:"post",
+            url:"findAll",
+            dataType:"json",
+            success: function(result) {
+                vm.userList = result;
+            },
+            error : function() {
+                alert("系统错误，请联系管理员！");
+            }
+        })
+
+    }
+
+
+    function saveUser(){
+
+
+        var data=$('#addForm').serialize();
+        var submitData=decodeURIComponent(data,true);
+        $.ajax({
+            url:"../user/saveUser",
+            type:"post",
+            data:submitData,
+            success:function(){
+                alert("保存成功");
+                window.location.reload();
+            }
+        })
+    }
+
+
+    function HxUser(id){
+        $.ajax({
+            url:"../user/HxUser",
+            type:"post",
+            data:{id:id},
+            success:function(result){
+
+                vm.userHxList = result;
+            }
+        })
+
+
+    }
+
+
+    function deleteUser(id){
+        $.ajax({
+            url:"../user/delUser",
+            type:"post",
+            data:{id:id},
+            success:function(){
+                alert("删除成功")
+                window.location.reload();
+            }
+        })
+    }
+
+
+
+</script>
+
+</html>

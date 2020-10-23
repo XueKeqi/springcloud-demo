@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- 兼容IE -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>bootstrap-treeview</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap-treeview/1.2.0/bootstrap-treeview.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-contextmenu/2.7.1/jquery.contextMenu.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap-treeview/1.2.0/bootstrap-treeview.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-2">
+            <div id="treeview2" class="">
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Script -->
+
+<script type="text/javascript">
+    $(function() {
+
+        $('#treeview2').treeview({
+            color: "#428bca",
+            expandIcon: 'glyphicon glyphicon-chevron-right',
+            collapseIcon: 'glyphicon glyphicon-chevron-down',
+            nodeIcon: 'glyphicon glyphicon-bookmark',
+            data: getTree()
+        });
+        //定义树里的数据来源
+        function getTree(){
+            var data = [
+                {
+                    text: 'Parent 1',
+                    href: '#parent1',
+                    tags: ['4'],
+                    nodes: [
+                        {
+                            text: 'Child 1',
+                            href: '#child1',
+                            tags: ['2'],
+                            nodes: [
+                                {
+                                    text: 'Grandchild 1',
+                                    href: '#grandchild1',
+                                    tags: ['0']
+                                },
+                                {
+                                    text: 'Grandchild 2',
+                                    href: '#grandchild2',
+                                    tags: ['0']
+                                }
+                            ]
+                        },
+                        {
+                            text: 'Child 2',
+                            href: '#child2',
+                            tags: ['0']
+                        }
+                    ]
+                },
+                {
+                    text: 'Parent 2',
+                    href: '#parent2',
+                    tags: ['0']
+                }
+            ];
+            return data;
+        }
+    });
+</script>
+</body>
+</html>
