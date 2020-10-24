@@ -20,6 +20,8 @@ public class UserEntity {
 
     private String userResp;
 
+    private String aa;
+
 
     /*业务字段*/
 
