@@ -9,9 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
-import java.util.Map;
 
-@FeignClient(value = "springcloud-login",fallback = UserHystrix.class)
+@FeignClient(value = "userclient",fallback = UserHystrix.class)
 public interface UserService {
 
     @RequestMapping("user/findOne")

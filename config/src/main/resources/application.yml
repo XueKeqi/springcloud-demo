@@ -1,9 +1,10 @@
 server:
-  port: 9100
+  port: 8766
 
 spring:
   application:
     name: config
+  cloud:
     config:
       server:
         git:
@@ -25,7 +26,6 @@ spring:
     port: 5672
     username: guest
     password: guest
-
 
 eureka:
   client:
