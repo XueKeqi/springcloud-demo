@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    用户列表页面
+    <a href="" shiro:hasPermission="user:create">新增</a>
+    <a href="" shiro:hasPermission="user:delete">删除</a>
+    <a href="" shiro:hasPermission="user:update">修改</a>
+    <shiro:hasPermission name="user:deleteAll">
+        <button>
+            批删
+        </button>
+    </shiro:hasPermission>
+</body>
+</html>

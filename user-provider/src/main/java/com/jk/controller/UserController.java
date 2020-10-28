@@ -1,5 +1,7 @@
 package com.jk.controller;
 
+import com.jk.entity.SysUser;
+import com.jk.entity.Tree;
 import com.jk.entity.UserEntity;
 import com.jk.service.UserService;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -8,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 public class UserController {
@@ -17,52 +19,32 @@ public class UserController {
     @Resource
     private UserService userService;
 
-    /**
-     * 查询
-     *
-     * @return
-     */
-    @RequestMapping("user/findAll")
-    public List<UserEntity> findAll(@RequestBody UserEntity user){
-        List<UserEntity> list = userService.findAll(user);
+
+    @RequestMapping("/selectUserInfoByCode")
+    public SysUser selectUserInfoByCode(@RequestParam String userCode) {
+        return userService.selectUserInfoByCode(userCode);
+    }
+
+    @RequestMapping("/selectTreeList")
+    public List<Tree> selectTreeList(@RequestParam Integer userId){
+        return userService.selectTreeList(userId);
+    }
+
+    @RequestMapping("/selectPowerKeyList")
+    public List<String> selectPowerKeyList(@RequestParam Integer userId){
+        return userService.selectPowerKeyList(userId);
+    }
+
+
+    @RequestMapping("/list")
+    public List<UserEntity> list(@RequestBody UserEntity paramUser){
+        System.out.println(paramUser);
+        UserEntity user = new UserEntity();
+        user.setUserId(1);
+        user.setUserName("李新");
+        user.setPassword("123");
+        List<UserEntity> list = new ArrayList<UserEntity>();
+        list.add(user);
         return list;
     }
-
-    /**
-     * 新增+修改
-     * @param user
-     */
-    @RequestMapping("user/saveUser")
-    public void addUser(@RequestBody UserEntity user){
-
-        if(user.getUserId()!=null){
-            userService.updUser(user);
-        }else{
-            userService.addUser(user);
-        }
-
-
-    }
-
-    /**
-     * 回显
-     * @param id
-     * @return
-     */
-    @RequestMapping("user/HxUser")
-    public UserEntity HxUser(@RequestParam Integer id){
-       return userService.HxUser(id);
-    }
-
-
-    /**
-     * 删除
-     * @param id
-     */
-    @RequestMapping("user/delUser")
-    public void delUser(@RequestParam Integer id){
-        userService.delUser(id);
-    }
-
-
 }

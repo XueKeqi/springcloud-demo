@@ -1,22 +1,18 @@
 package com.jk.dao;
 
-import com.jk.entity.UserEntity;
+import com.jk.entity.SysUser;
+import com.jk.entity.Tree;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
-import java.util.Map;
 
 @Mapper
 public interface UserMapper {
-    List<UserEntity> findAll(@RequestBody UserEntity user);
 
-    void addUser(UserEntity user);
+    SysUser selectUserInfoByCode(@Param("userCode") String userCode);
 
-    UserEntity HxUser(Integer id);
+    List<Tree> selectTreeList(@Param("pid") Integer pid, @Param("userId") Integer userId);
 
-    void delUser(Integer id);
-
-    void updUser(UserEntity user);
+    List<String> selectPowerKeyList(@Param("userId") Integer userId);
 }

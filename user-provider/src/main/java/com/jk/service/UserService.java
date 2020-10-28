@@ -1,19 +1,15 @@
 package com.jk.service;
 
-import com.jk.entity.UserEntity;
-import org.springframework.web.bind.annotation.RequestBody;
+import com.jk.entity.SysUser;
+import com.jk.entity.Tree;
 
 import java.util.List;
-import java.util.Map;
 
 public interface UserService {
-    List<UserEntity> findAll(@RequestBody UserEntity user);
 
-    void addUser(UserEntity user);
+    SysUser selectUserInfoByCode(String userCode);
 
-    UserEntity HxUser(Integer id);
+    List<Tree> selectTreeList(Integer userId);
 
-    void delUser(Integer id);
-
-    void updUser(UserEntity user);
+    List<String> selectPowerKeyList(Integer userId);
 }

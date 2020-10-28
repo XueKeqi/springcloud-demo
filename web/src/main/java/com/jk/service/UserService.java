@@ -1,33 +1,31 @@
 package com.jk.service;
 
+import com.jk.entity.SysUser;
+import com.jk.entity.Tree;
 import com.jk.entity.UserEntity;
-import com.jk.hystrix.UserHystrix;
+import com.jk.hystrix.UserServiceHystrix;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
-@FeignClient(value = "userclient",fallback = UserHystrix.class)
+@FeignClient(value = "userclient", fallback = UserServiceHystrix.class)
 public interface UserService {
 
-    @RequestMapping("user/findOne")
-    public  String findOne();
+    @RequestMapping("/show")
+    String show();
 
-    @GetMapping("user/findAll")
-    public List<UserEntity> findAll(@RequestBody UserEntity user);
+    @RequestMapping("/list")
+    public List<UserEntity> list(@RequestBody UserEntity paramUser);
 
-    @GetMapping("user/saveUser")
-    public void saveUser(@RequestBody UserEntity user);
+    @RequestMapping("/selectUserInfoByCode")
+    SysUser selectUserInfoByCode(@RequestParam String userCode);
 
-    @GetMapping("user/HxUser")
-    public UserEntity HxUser(@RequestParam Integer id);
+    @RequestMapping("/selectTreeList")
+    List<Tree> selectTreeList(@RequestParam Integer userId);
 
-
-    @GetMapping("user/delUser")
-    public void delUser(@RequestParam Integer id);
-
-
+    @RequestMapping("/selectPowerKeyList")
+    List<String> selectPowerKeyList(@RequestParam Integer userId);
 }
