@@ -40,9 +40,9 @@ public class UserController {
     public List<UserEntity> list(@RequestBody UserEntity paramUser){
         System.out.println(paramUser);
         UserEntity user = new UserEntity();
-        user.setUserId(1);
-        user.setUserName("李新");
-        user.setPassword("123");
+        user.setUserId(10);
+        user.setUserName("qwe");
+        user.setPassword("qwe");
         List<UserEntity> list = new ArrayList<UserEntity>();
         list.add(user);
         return list;

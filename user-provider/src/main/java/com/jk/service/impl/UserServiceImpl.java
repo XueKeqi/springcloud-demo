@@ -49,6 +49,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<String> selectPowerKeyList(Integer userId) {
+        System.out.print(userMapper.selectPowerKeyList(userId));
         return userMapper.selectPowerKeyList(userId);
     }
 

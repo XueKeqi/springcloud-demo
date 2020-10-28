@@ -1,12 +1,17 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<html lang="en" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" href="/css/bootstrap.css">
+    <script th:src="@{/webjars/jquery/3.5.1/dist/jquery.min.js}"></script>
+    <script th:src="@{/webjars/bootstrap/3.3.7/dist/js/bootstrap.min.js}"></script>
+    <script type="text/javascript" src="/vue/vue.min.js"></script>
+    <script type="text/javascript" src="/bootstrap/bootstrap-paginator.js"></script>
 </head>
 <body>
     用户列表页面
-    <a href="" shiro:hasPermission="user:create">新增</a>
+    <a href="#" data-toggle="modal" data-target="#editModal" shiro:hasPermission="user:create">Add</a>
     <a href="" shiro:hasPermission="user:delete">删除</a>
     <a href="" shiro:hasPermission="user:update">修改</a>
     <shiro:hasPermission name="user:deleteAll">
@@ -14,5 +19,191 @@
             批删
         </button>
     </shiro:hasPermission>
+    <div id="app">
+        <table class="table table-hover">
+            <tr>
+                <th>#</th>
+                <th>NAME</th>
+                <th>DEPTID</th>
+                <th>CREATETIME</th>
+                <th>POST</th>
+                <th>RESP</th>
+                <th>UPDATE</th>
+                <th>DELETE</th>
+            </tr>
+            <tr v-for="user in userList">
+                <td>{{user.userId}}</td>
+                <td>{{user.userName}}</td>
+                <td>{{user.deptName}}</td>
+                <td>{{user.userCreatetime}}</td>
+                <td>{{user.userPost}}</td>
+                <td>{{user.userResp}}</td>
+
+                <td>
+
+                    <button shiro:hasPermission="user:update" class="btn btn-success" :value="user.userId" data-dismiss="modal" data-toggle="modal" data-target="#editModal" onclick="HxUser(this.value)">修改</button>
+                </td>
+                <td>
+                    <button shiro:hasPermission="user:delete" class="btn btn-success" :value="user.userId" data-dismiss="modal" onclick="deleteUser(this.value)">删除</button>
+
+                </td>
+            </tr>
+        </table>
+        <div id="example" style="text-align: center;"> <ul id="pageLimit"></ul> </div>
+
+        <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog" >
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <!-- <span aria-hidden="true">&times;</span>-->
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">❌</button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="addForm"  method="post">
+                            <table class="table table-bordered table-striped"  width="800px">
+                                <!--id、名称、部门（两表）、入职日期、岗位、职责-->
+                                <input type="hidden" :value="userHxList.userId" name="userId">
+                                <tr>
+                                    <td>姓名</td>
+                                    <td><input :value="userHxList.userName" id="username" name="userName" class="form-control" placeholder="请输入姓名"></td>
+                                </tr>
+                                <tr>
+                                    <td>部门</td>
+                                    <td>
+                                        <!-- <div class="col-sm-3">
+                                             <select class="selectpicker form-control" data-live-search="true" name="addid" id="addid">
+                                             </select>
+                                         </div>-->
+
+                                        <input :checked="userHxList.userDeptid==1" name="userDeptid" type="radio"  value="1">产品
+                                        <input :checked="userHxList.userDeptid==2" name="userDeptid" type="radio"  value="2">开发
+
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>岗位</td>
+                                    <td>
+                                        <!--<input :checked="userHxList.userClassid==1" name="userPost" type="radio"  value="1">2003
+                                        <input :checked="userHxList.userClassid==2" name="userClassid" type="radio"  value="2">2004-->
+                                        <input :value="userHxList.userPost"  name="userPost" class="form-control" placeholder="请输入岗位">
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>职责</td>
+                                    <td><input :value="userHxList.userResp"  name="userResp" class="form-control" placeholder="职责"></td>
+                                </tr>
+
+                            </table>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-success" data-dismiss="modal" aria-hidden="true" onclick="saveUser()">保存</button>
+                        <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">关闭</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </body>
+
+
+
+<script>
+
+    var vm = new Vue({
+        el: '#app',
+        data: {
+            userList: "",
+            userHxList:"",
+            radioflag:"",
+
+        }
+    })
+
+
+
+    function shows(a) {
+        $('.buttonText').text(a)
+    }
+
+    //关闭模态框时清空数据
+    $(function (){
+        $('#editModal').on('hidden.bs.modal', function (){
+            $(':input','#addForm').not(':button,:submit,:reset').val('').removeAttr('checked').removeAttr('checked');
+        });
+    });
+
+
+    $(function() {
+        searchUserList();
+    })
+
+
+    function searchUserList(){
+
+        $.ajax({
+            type:"post",
+            url:"../emp/findAll",
+            dataType:"json",
+            success: function(result) {
+                vm.userList = result;
+            },
+            error : function() {
+                alert("系统错误，请联系管理员！");
+            }
+        })
+
+    }
+
+
+    function saveUser(){
+
+
+        var data=$('#addForm').serialize();
+        var submitData=decodeURIComponent(data,true);
+        $.ajax({
+            url:"../emp/saveUser",
+            type:"post",
+            data:submitData,
+            success:function(){
+                alert("保存成功");
+                window.location.reload();
+            }
+        })
+    }
+
+
+    function HxUser(id){
+        $.ajax({
+            url:"../emp/HxUser",
+            type:"post",
+            data:{id:id},
+            success:function(result){
+
+                vm.userHxList = result;
+            }
+        })
+
+
+    }
+
+
+    function deleteUser(id){
+        $.ajax({
+            url:"../emp/delUser",
+            type:"post",
+            data:{id:id},
+            success:function(){
+                window.location.reload();
+            }
+        })
+    }
+
+
+
+</script>
+
 </html>
