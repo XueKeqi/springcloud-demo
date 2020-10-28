@@ -1,0 +1,23 @@
+server:
+  port: 9100
+spring:
+  application:
+    name: spring-cloud-server
+
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/XueKeqi/myconfig.git
+          username:
+          password:
+          skip-ssl-validation: true
+          search-paths: /
+        label: master
+
+
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
