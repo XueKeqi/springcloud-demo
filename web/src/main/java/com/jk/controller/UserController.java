@@ -54,7 +54,7 @@ public class UserController {
     }
 
     @RequestMapping("/queryUser")
-    @RequiresPermissions("user:query")
+    //@RequiresPermissions("user:query")
     public String queryUser() {
         return "userList";
     }
