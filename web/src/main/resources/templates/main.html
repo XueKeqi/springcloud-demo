@@ -53,21 +53,24 @@
         </div>
         <div class="col-xs-10">
             <div id="myTabs">
+                <iframe style="border: medium none"
+                        width = "100%"
+                        height = "800" id="iframe">
+                </iframe>
 
 
-
-                <!-- 新选项卡 -->
+               <!-- &lt;!&ndash; 新选项卡 &ndash;&gt;
                 <ul class="nav nav-tabs" id="tablist">
                     <li role="presentation" class="active">
                         <a href="#home" role="tab" data-toggle="tab">欢迎</a>
                     </li>
                 </ul>
-                <!-- 选项卡下内容 -->
+                &lt;!&ndash; 选项卡下内容 &ndash;&gt;
                 <div class="tab-content">
                     <div role="tabpanel" class="tab-pane active" id="home">
 
                     </div>
-                </div>
+                </div>-->
 
 
 
@@ -92,13 +95,16 @@
                 $('#myTree').treeview({
                     data:data,
                     onNodeSelected:function(event, node) {
+
+                        iframe.src = "http://localhost:8080/"+node.href;
+
                         alert(event+"  "+node.id+"  "+node.text+"  "+node.href);
-                        $.addtabs({iframeHeight: 550});
+                        /*$.addtabs({iframeHeight: 550});
                         $.addtabs.add({
                             id:node.id,
                             title:node.text,
                             url:node.href
-                        });
+                        });*/
                     }
                 })
             }
