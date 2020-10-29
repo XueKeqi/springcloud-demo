@@ -6,12 +6,13 @@
     <link rel="stylesheet" href="/css/bootstrap.css">
     <script th:src="@{/webjars/jquery/3.5.1/dist/jquery.min.js}"></script>
     <script th:src="@{/webjars/bootstrap/3.3.7/dist/js/bootstrap.min.js}"></script>
-    <script type="text/javascript" src="/vue/vue.min.js"></script>
-    <script type="text/javascript" src="/bootstrap/bootstrap-paginator.js"></script>
+    <script type="text/javascript" src="../vue/vue.min.js"></script>
+    <script type="text/javascript" src="../bootstrap/bootstrap-paginator.js"></script>
 </head>
 <body>
     用户列表页面
-    <a href="#" data-toggle="modal" data-target="#editModal" shiro:hasPermission="user:create">Add</a>
+    <a href="#" data-toggle="modal" data-target="#editModal">Add</a>
+   <!-- <a href="#" data-toggle="modal" data-target="#editModal" shiro:hasPermission="user:create">Add</a>-->
     <shiro:hasPermission name="user:deleteAll">
         <button>
             批删
