@@ -16,6 +16,13 @@ public class EmpController {
     @Resource
     private EmpService empService;
 
+
+    @RequestMapping("/find")
+    public String find() {
+        return "zuul请求成功";
+    }
+
+
     /**
      * 查询
      *
