@@ -12,8 +12,6 @@
 <body>
     用户列表页面
     <a href="#" data-toggle="modal" data-target="#editModal" shiro:hasPermission="user:create">Add</a>
-    <a href="" shiro:hasPermission="user:delete">删除</a>
-    <a href="" shiro:hasPermission="user:update">修改</a>
     <shiro:hasPermission name="user:deleteAll">
         <button>
             批删
