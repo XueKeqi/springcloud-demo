@@ -16,6 +16,12 @@ public class EmpController {
     private EmpService empService;
 
 
+    @RequestMapping("find")
+    public String find(){
+        return "请求成功";
+    }
+
+
     /**
      * 查询
      *
