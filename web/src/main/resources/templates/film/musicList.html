@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/css/bootstrap.css">
+    <script th:src="@{/webjars/jquery/3.5.1/dist/jquery.min.js}"></script>
+    <script th:src="@{/webjars/bootstrap/3.3.7/dist/js/bootstrap.min.js}"></script>
+    <script type="text/javascript" src="../vue/vue.min.js"></script>
+    <script type="text/javascript" src="../bootstrap/bootstrap-paginator.js"></script>
+</head>
+<body>
+音乐列表页面
+<a href="#" data-toggle="modal" data-target="#editModal">Add</a>
+<!-- <a href="#" data-toggle="modal" data-target="#editModal" shiro:hasPermission="user:create">Add</a>-->
+<shiro:hasPermission name="user:deleteAll">
+    <button>
+        批删
+    </button>
+</shiro:hasPermission>
+<div id="app">
+    <table class="table table-hover">
+        <tr>
+            <th>#</th>
+            <th>musicId</th>
+            <th>musicName</th>
+            <th>musicType</th>
+            <th>musicTime</th>
+            <th>musicSinger</th>
+            <th>UPDATE</th>
+            <th>DELETE</th>
+        </tr>
+        <tr v-for="music in musicList">
+            <td>{{user.musicId}}</td>
+            <td>{{user.musicName}}</td>
+            <td>{{user.musicType}}</td>
+            <td>{{user.musicTime}}</td>
+            <td>{{user.musicSinger}}</td>
+            <td>
+
+                <button shiro:hasPermission="user:update" class="btn btn-success" :value="user.userId" data-dismiss="modal" data-toggle="modal" data-target="#editModal" onclick="HxUser(this.value)">修改</button>
+            </td>
+            <td>
+                <button shiro:hasPermission="user:delete" class="btn btn-success" :value="user.userId" data-dismiss="modal" onclick="deleteUser(this.value)">删除</button>
+
+            </td>
+        </tr>
+    </table>
+    <div id="example" style="text-align: center;"> <ul id="pageLimit"></ul> </div>
+
+    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" >
+            <div class="modal-content">
+                <div class="modal-header">
+                    <!-- <span aria-hidden="true">&times;</span>-->
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">❌</button>
+                </div>
+                <div class="modal-body">
+                    <form id="addForm"  method="post">
+                        <table class="table table-bordered table-striped"  width="800px">
+                            <!--id、名称、部门（两表）、入职日期、岗位、职责-->
+                            <input type="hidden" :value="userHxList.userId" name="musicId">
+                            <tr>
+                                <td>音乐名称</td>
+                                <td><input :value="userHxList.musicname" id="musicname" name="musicName" class="form-control" placeholder="请输入姓名"></td>
+                            </tr>
+                            <tr>
+                                <td>音乐类型</td>
+                                <td>
+                                    <!-- <div class="col-sm-3">
+                                         <select class="selectpicker form-control" data-live-search="true" name="addid" id="addid">
+                                         </select>
+                                     </div>-->
+
+                                    <input :checked="userHxList.userType==1" name="userType" type="radio"  value="1">流行
+                                    <input :checked="userHxList.userType==2" name="userType" type="radio"  value="2">hiphop
+
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>音乐时长</td>
+                                <td>
+                                    <!--<input :checked="userHxList.userClassid==1" name="userPost" type="radio"  value="1">2003
+                                    <input :checked="userHxList.userClassid==2" name="userClassid" type="radio"  value="2">2004-->
+                                    <input :value="userHxList.userTime"  name="userTime" class="form-control">
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>歌手</td>
+                                <td><input :value="userHxList.userSinger"  name="userSinger" class="form-control" placeholder="歌手"></td>
+                            </tr>
+
+                        </table>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-success" data-dismiss="modal" aria-hidden="true" onclick="saveUser()">保存</button>
+                    <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+
+
+
+<script>
+
+    var vm = new Vue({
+        el: '#app',
+        data: {
+            muiscList: "",
+            userHxList:"",
+            radioflag:"",
+
+        }
+    })
+
+
+
+    function shows(a) {
+        $('.buttonText').text(a)
+    }
+
+    //关闭模态框时清空数据
+    $(function (){
+        $('#editModal').on('hidden.bs.modal', function (){
+            $(':input','#addForm').not(':button,:submit,:reset').val('').removeAttr('checked').removeAttr('checked');
+        });
+    });
+
+
+    $(function() {
+        searchUserList();
+    })
+
+
+    function searchUserList(){
+
+        $.ajax({
+            type:"post",
+            url:"../music/findlist",
+            dataType:"json",
+            success: function(result) {
+                vm.musicList = result;
+            },
+            error : function() {
+                alert("系统错误，请联系管理员！");
+            }
+        })
+
+    }
+
+
+    function saveUser(){
+
+
+        var data=$('#addForm').serialize();
+        var submitData=decodeURIComponent(data,true);
+        $.ajax({
+            url:"../muisc/add",
+            type:"post",
+            data:submitData,
+            success:function(){
+                alert("保存成功");
+                window.location.reload();
+            }
+        })
+    }
+
+
+    function HxUser(id){
+        $.ajax({
+            url:"../music/querybyid",
+            type:"post",
+            data:{id:id},
+            success:function(result){
+
+                vm.userHxList = result;
+            }
+        })
+
+
+    }
+
+
+    function deleteUser(id){
+        $.ajax({
+            url:"../music/deleteall",
+            type:"post",
+            data:{id:id},
+            success:function(){
+                window.location.reload();
+            }
+        })
+    }
+
+
+
+</script>
+
+</html>

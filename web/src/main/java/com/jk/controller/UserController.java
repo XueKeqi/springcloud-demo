@@ -61,13 +61,6 @@ public class UserController {
 
 
 
-
-
-
-
-
-
-
     @RequestMapping("/list")
     @ResponseBody
     public List<UserEntity> list(String userName) {
