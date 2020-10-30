@@ -2,7 +2,7 @@ package com.jk.aop;
 
 import com.alibaba.fastjson.JSONObject;
 import com.jk.pojo.LogBean;
-import com.jk.service.impl.LogSenderServiceImpl;
+import com.jk.service.impl.LogSenderService;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class LogAspect {
     @Autowired
-    private LogSenderServiceImpl logSenderServiceImpl;
+    private LogSenderService logSenderService;
 
     @Pointcut(value="execution(* com.jk.controller.*.*(..))")
     public void logCut(){ }
@@ -36,6 +36,6 @@ public class LogAspect {
         log.setRequestParam(responseParams);
         log.setResponseParan(responseParams);
         String logJson= JSONObject.toJSONString(log);
-        logSenderServiceImpl.send(logJson);
+        logSenderService.send(logJson);
     }
 }
