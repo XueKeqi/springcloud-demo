@@ -10,7 +10,7 @@
     <script type="text/javascript" src="../bootstrap/bootstrap-paginator.js"></script>
 </head>
 <body>
-音乐列表页面
+用户列表页面
 <a href="#" data-toggle="modal" data-target="#editModal">Add</a>
 <!-- <a href="#" data-toggle="modal" data-target="#editModal" shiro:hasPermission="user:create">Add</a>-->
 <shiro:hasPermission name="user:deleteAll">
@@ -22,20 +22,21 @@
     <table class="table table-hover">
         <tr>
             <th>#</th>
-            <th>musicId</th>
-            <th>musicName</th>
-            <th>musicType</th>
-            <th>musicTime</th>
-            <th>musicSinger</th>
+            <th>NAME</th>
+            <th>DEPTID</th>
+            <th>CREATETIME</th>
+            <th>POST</th>
             <th>UPDATE</th>
             <th>DELETE</th>
         </tr>
-        <tr v-for="music in musicList">
+        <tr v-for="user in userList">
             <td>{{user.musicId}}</td>
             <td>{{user.musicName}}</td>
             <td>{{user.musicType}}</td>
             <td>{{user.musicTime}}</td>
             <td>{{user.musicSinger}}</td>
+
+
             <td>
 
                 <button shiro:hasPermission="user:update" class="btn btn-success" :value="user.userId" data-dismiss="modal" data-toggle="modal" data-target="#editModal" onclick="HxUser(this.value)">修改</button>
@@ -59,37 +60,37 @@
                     <form id="addForm"  method="post">
                         <table class="table table-bordered table-striped"  width="800px">
                             <!--id、名称、部门（两表）、入职日期、岗位、职责-->
-                            <input type="hidden" :value="userHxList.userId" name="musicId">
+                            <input type="hidden" :value="userHxList.userId" name="userId">
                             <tr>
-                                <td>音乐名称</td>
-                                <td><input :value="userHxList.musicname" id="musicname" name="musicName" class="form-control" placeholder="请输入姓名"></td>
+                                <td>姓名</td>
+                                <td><input :value="userHxList.userName" id="username" name="userName" class="form-control" placeholder="请输入姓名"></td>
                             </tr>
                             <tr>
-                                <td>音乐类型</td>
+                                <td>部门</td>
                                 <td>
                                     <!-- <div class="col-sm-3">
                                          <select class="selectpicker form-control" data-live-search="true" name="addid" id="addid">
                                          </select>
                                      </div>-->
 
-                                    <input :checked="userHxList.userType==1" name="userType" type="radio"  value="1">流行
-                                    <input :checked="userHxList.userType==2" name="userType" type="radio"  value="2">hiphop
+                                    <input :checked="userHxList.userDeptid==1" name="userDeptid" type="radio"  value="1">产品
+                                    <input :checked="userHxList.userDeptid==2" name="userDeptid" type="radio"  value="2">开发
 
                                 </td>
                             </tr>
 
                             <tr>
-                                <td>音乐时长</td>
+                                <td>岗位</td>
                                 <td>
                                     <!--<input :checked="userHxList.userClassid==1" name="userPost" type="radio"  value="1">2003
                                     <input :checked="userHxList.userClassid==2" name="userClassid" type="radio"  value="2">2004-->
-                                    <input :value="userHxList.userTime"  name="userTime" class="form-control">
+                                    <input :value="userHxList.userPost"  name="userPost" class="form-control" placeholder="请输入岗位">
                                 </td>
                             </tr>
 
                             <tr>
-                                <td>歌手</td>
-                                <td><input :value="userHxList.userSinger"  name="userSinger" class="form-control" placeholder="歌手"></td>
+                                <td>职责</td>
+                                <td><input :value="userHxList.userResp"  name="userResp" class="form-control" placeholder="职责"></td>
                             </tr>
 
                         </table>
@@ -113,7 +114,7 @@
     var vm = new Vue({
         el: '#app',
         data: {
-            muiscList: "",
+            userList: "",
             userHxList:"",
             radioflag:"",
 
@@ -140,13 +141,12 @@
 
 
     function searchUserList(){
-
         $.ajax({
             type:"post",
-            url:"../music/findlist",
+            url:"../music/findAll",
             dataType:"json",
             success: function(result) {
-                vm.musicList = result;
+                vm.userList = result;
             },
             error : function() {
                 alert("系统错误，请联系管理员！");
@@ -162,7 +162,7 @@
         var data=$('#addForm').serialize();
         var submitData=decodeURIComponent(data,true);
         $.ajax({
-            url:"../muisc/add",
+            url:"../emp/saveUser",
             type:"post",
             data:submitData,
             success:function(){
@@ -175,7 +175,7 @@
 
     function HxUser(id){
         $.ajax({
-            url:"../music/querybyid",
+            url:"../emp/HxUser",
             type:"post",
             data:{id:id},
             success:function(result){
@@ -190,7 +190,7 @@
 
     function deleteUser(id){
         $.ajax({
-            url:"../music/deleteall",
+            url:"../emp/delUser",
             type:"post",
             data:{id:id},
             success:function(){

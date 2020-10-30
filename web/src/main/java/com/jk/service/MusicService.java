@@ -14,7 +14,7 @@ public interface MusicService {
     public List<MusicEntity> findlist();
 
     @RequestMapping("music/deleteall")
-    public void deleteall(@RequestParam String [] id);
+    public void deleteall(@RequestParam String[] id);
 
     @RequestMapping("music/add")
     public void add(@RequestBody MusicEntity music);

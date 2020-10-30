@@ -6,3 +6,8 @@ server:
 spring:
   application:
     name: filmclient
+  datasource:
+    url: jdbc:mysql://DESKTOP-QLADQDP:3306/ssm?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8&useSSL=true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 123

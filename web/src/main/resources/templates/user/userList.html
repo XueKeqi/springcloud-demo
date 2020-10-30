@@ -142,12 +142,14 @@
 
 
     function searchUserList(){
+        alert(1)
 
         $.ajax({
             type:"post",
             url:"../emp/findAll",
             dataType:"json",
             success: function(result) {
+                alert(result)
                 vm.userList = result;
             },
             error : function() {

@@ -20,23 +20,23 @@ public class MusicController {
         return "film/musicList";
     }
 
-    @RequestMapping("findlist")
+    @RequestMapping("findAll")
     @ResponseBody
     public List<MusicEntity> findlist() {
         return  musicService.findlist();
     }
-    @RequestMapping("deleteall")
+    @RequestMapping("deleteAll")
     @ResponseBody
     public void deleteall(@RequestParam String [] id){
         musicService.deleteall(id);
     }
-    @RequestMapping("add")
+    @RequestMapping("Add")
     @ResponseBody
     public void add(@RequestBody MusicEntity music){
         musicService.add(music);
     }
 
-    @RequestMapping("querybyid")
+    @RequestMapping("queryById")
     @ResponseBody
     public MusicEntity querybyid(@RequestParam Integer id) {
 

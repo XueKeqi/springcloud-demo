@@ -3,7 +3,7 @@
 <mapper namespace="com.jk.dao.MusicMapper">
 
 
-    <select id="findlist" resultType="MusicEntity">
+    <select id="findList" resultType="MusicEntity">
         select * from music
     </select>
 
