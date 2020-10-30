@@ -1,4 +1,4 @@
-package com.jk.controller;
+package com.jk.controller.user;
 
 import com.jk.entity.SysUser;
 import com.jk.entity.Tree;
@@ -58,6 +58,8 @@ public class UserController {
     public String queryUser() {
         return "user/userList";
     }
+
+
 
 
 
