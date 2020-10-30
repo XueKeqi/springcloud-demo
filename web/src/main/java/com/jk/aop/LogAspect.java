@@ -7,35 +7,55 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
 
 @Aspect
 @Component
 public class LogAspect {
-    @Autowired
+
+    private static final Logger logger = LoggerFactory.getLogger(LogAspect.class);
+
+    @Resource
     private LogSenderService logSenderService;
 
-    @Pointcut(value="execution(* com.jk.controller.*.*(..))")
-    public void logCut(){ }
+    // 第一个*代表 所有返回值
+    // 第二个*代表所有类
+    // 第三个*代表所有方法
+    // .. 代表所有参数
+    @Pointcut(value = "execution(* com.jk.controller.*.*(..))")
+    public void logCut(){}
 
-    @AfterReturning(pointcut = "logCut()",returning = "obj")
-    public void saveLog(JoinPoint joinPoint,Object obj){
+    @AfterReturning(pointcut = "logCut()", returning = "obj")
+    public void saveLog(JoinPoint joinPoint, Object obj) {
+        String className = joinPoint.getTarget().getClass().getSimpleName();
 
-        String MethodName=joinPoint.getClass().getName();
-        String className=joinPoint.getTarget().getClass().getSimpleName();
-        Object[] args= joinPoint.getArgs();
-        StringBuffer requestPatams= new StringBuffer();
-        for(int i=0;i<args.length;i++){
-            requestPatams.append("第"+i+"个参数="+args[i]);
+        String methodName = joinPoint.getSignature().getName();
+
+        Object[] args = joinPoint.getArgs();
+
+        // |第1个参数：Name:张三|第二个参数：age:12
+        StringBuffer sb = new StringBuffer();
+        for (int i=0; i < args.length; i++) {
+            sb.append("|第"+(i+1)+"个参数：" + args[i]);
         }
-        String responseParams=obj==null?"":obj.toString();
-        LogBean log=  new LogBean();
+
+        String responseParam = obj == null ? "" : obj.toString();
+
+        LogBean log = new LogBean();
         log.setClassName(className);
-        log.setMethodName(MethodName);
-        log.setRequestParam(responseParams);
-        log.setResponseParan(responseParams);
-        String logJson= JSONObject.toJSONString(log);
+        log.setMethodName(methodName);
+        log.setRequestParam(sb.toString());
+        log.setResponseParam(responseParam);
+
+        String logJson = JSONObject.toJSONString(log);
+
+        logger.info(logJson);
+
         logSenderService.send(logJson);
+
     }
 }

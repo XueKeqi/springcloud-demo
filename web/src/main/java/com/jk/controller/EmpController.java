@@ -1,4 +1,4 @@
-package com.jk.controller.user;
+package com.jk.controller;
 
 import com.jk.entity.EmpEntity;
 import com.jk.service.EmpService;
